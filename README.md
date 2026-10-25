@@ -374,7 +374,8 @@ All filters are optional and can be combined.
 
 ## 🧪 Test Report
 
-The backend has **57 passing tests** across 3 suites.
+The backend has **57 passing tests** across 3 suites. A captured run of the full
+suite is available in [`docs/test-report.txt`](docs/test-report.txt).
 
 ```text
 Test Suites: 3 passed, 3 total
