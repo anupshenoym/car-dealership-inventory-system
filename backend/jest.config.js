@@ -16,6 +16,7 @@ module.exports = {
     'src/**/*.ts',
     '!src/**/*.test.ts',
     '!src/server.ts',
+    '!src/scripts/**',
   ],
   coverageReporters: ['text', 'lcov', 'html'],
   coverageDirectory: 'coverage',
