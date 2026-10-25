@@ -65,7 +65,7 @@ async function seed(): Promise<void> {
   const db = await getDatabase();
 
   for (const demo of demoUsers) {
-    const existing = queryOne<{ id: string }>(db, 'SELECT id FROM users WHERE email = ?', [demo.email]);
+    const existing = await queryOne<{ id: string }>(db, 'SELECT id FROM users WHERE email = ?', [demo.email]);
     if (existing) {
       console.log(`↩︎  User already exists: ${demo.email}`);
       continue;
@@ -74,12 +74,12 @@ async function seed(): Promise<void> {
     console.log(`✅ Created ${demo.role}: ${demo.email} / ${demo.password}`);
   }
 
-  const { total } = getAllVehicles(db, 1, 1);
+  const { total } = await getAllVehicles(db, 1, 1);
   if (total > 0) {
     console.log(`↩︎  Inventory already contains ${total} vehicle(s); skipping demo vehicles.`);
   } else {
     for (const vehicle of demoVehicles) {
-      createVehicle(db, vehicle);
+      await createVehicle(db, vehicle);
     }
     console.log(`✅ Added ${demoVehicles.length} demo vehicles.`);
   }

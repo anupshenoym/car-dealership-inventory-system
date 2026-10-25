@@ -1,10 +1,15 @@
 # 🚗 AutoVault — Car Dealership Inventory System
 
 A full-stack **Car Dealership Inventory System** built with **Test-Driven Development (TDD)**.
-It combines a RESTful Node.js/TypeScript API, a persistent SQLite database, JWT
-authentication, role-based access control, and a premium dark-mode React SPA.
+It combines a RESTful Node.js/TypeScript API, a persistent SQLite-compatible database
+(libSQL/Turso in production), JWT authentication, role-based access control, and a
+premium dark-mode React SPA.
 
-![AutoVault dashboard](docs/screenshots/dashboard.png)
+**Live demo:** [car-dealership-frontend-eight.vercel.app](https://car-dealership-frontend-eight.vercel.app)  
+**API:** [car-dealership-api-liard.vercel.app/api/health](https://car-dealership-api-liard.vercel.app/api/health)  
+**Repository:** [github.com/anupshenoym/car-dealership-inventory-system](https://github.com/anupshenoym/car-dealership-inventory-system)
+
+![AutoVault dashboard](docs/screenshots/live-dashboard.png)
 
 ---
 
@@ -20,7 +25,7 @@ authentication, role-based access control, and a premium dark-mode React SPA.
 - [API Reference](#-api-reference)
 - [Test Report](#-test-report)
 - [TDD Approach](#-tdd-approach)
-- [Deployment Notes](#-deployment-notes)
+- [Deployment](#-deployment)
 - [My AI Usage](#-my-ai-usage)
 
 ---
@@ -33,9 +38,11 @@ AutoVault is a dealership inventory platform where:
 - **Admins** can add, edit, delete, and restock vehicles.
 - **Every inventory mutation** is protected by JWT authentication, and admin-only routes are guarded by role checks.
 
-The database is a **file-backed SQLite database** (`backend/data/dealership.db`). The API uses
-`sql.js` so the project works on any machine without native C++ build tools, while still
-persisting data to disk after every write.
+The database layer uses **libSQL**, the open-source SQLite-compatible engine behind
+Turso. In local development it persists to `backend/data/dealership.db`; in
+production it talks to a hosted Turso database through the same async client API.
+That means the app keeps real persistence on a serverless host (Vercel) without a
+native SQLite build step.
 
 ---
 
@@ -49,6 +56,10 @@ persisting data to disk after every write.
 |------------------------|-------------------------|
 | ![Add vehicle modal](docs/screenshots/add-vehicle-modal.png) | ![SUV search results](docs/screenshots/search-filter.png) |
 
+**Deployed app (Vercel + Turso):**
+
+![Live deployed dashboard](docs/screenshots/live-dashboard.png)
+
 ---
 
 ## 🛠 Tech Stack
@@ -59,7 +70,7 @@ persisting data to disk after every write.
 |-----------|---------|
 | Node.js + TypeScript | Runtime & language |
 | Express.js | HTTP framework |
-| sql.js (SQLite) | Persistent file-backed database |
+| libSQL (Turso) | Persistent SQLite-compatible database |
 | JSON Web Tokens | Authentication |
 | bcryptjs | Password hashing |
 | Jest + Supertest | Unit and integration testing |
@@ -114,7 +125,7 @@ TDD Kata Car Dealership Inventory System/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
-│   │   │   └── database.ts              # sql.js connection, schema, persistence helpers
+│   │   │   └── database.ts              # libSQL client, schema, query helpers
 │   │   ├── controllers/
 │   │   │   ├── authController.ts
 │   │   │   └── vehicleController.ts
@@ -137,9 +148,12 @@ TDD Kata Car Dealership Inventory System/
 │   │   │   └── index.ts
 │   │   ├── app.ts                       # Express app
 │   │   └── server.ts                    # Entry point
+│   ├── api/
+│   │   └── index.ts                     # Vercel serverless entry point
 │   ├── .env.example
 │   ├── jest.config.js
 │   ├── tsconfig.json
+│   ├── vercel.json
 │   └── package.json
 ├── frontend/
 │   ├── public/
@@ -163,6 +177,7 @@ TDD Kata Car Dealership Inventory System/
 │   │   └── main.tsx
 │   ├── .env.example
 │   ├── vite.config.ts
+│   ├── vercel.json
 │   └── package.json
 ├── docs/
 │   ├── ai-logs/                         # Raw AI transcripts
@@ -185,8 +200,8 @@ TDD Kata Car Dealership Inventory System/
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
-cd "TDD Kata Car Dealership Inventory System"
+git clone https://github.com/anupshenoym/car-dealership-inventory-system.git
+cd "car-dealership-inventory-system"
 ```
 
 ### 2. Backend setup
@@ -207,6 +222,10 @@ PORT=3001
 JWT_SECRET=replace-with-a-long-random-secret
 FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
+
+# Optional: point at Turso instead of backend/data/dealership.db
+# TURSO_DATABASE_URL=libsql://your-db-your-org.turso.io
+# TURSO_AUTH_TOKEN=your-turso-auth-token
 ```
 
 Start the API:
@@ -268,7 +287,8 @@ credentials automatically.
 
 ## 📡 API Reference
 
-Base URL: `http://localhost:3001/api`
+Base URL (local): `http://localhost:3001/api`  
+Base URL (deployed): `https://car-dealership-api-liard.vercel.app/api`
 
 ### Auth Endpoints (Public)
 
@@ -385,11 +405,11 @@ Time:        ~6.4s
 
 File                   | % Stmts | % Branch | % Funcs | % Lines
 -----------------------|---------|----------|---------|--------
-All files              |   88.32 |    70.94 |   88.23 |   88.17
+All files              |   88.17 |     72.1 |   85.71 |      88
  src                   |   94.11 |       50 |      50 |   94.11
   app.ts               |   94.11 |       50 |      50 |   94.11
- src/config            |   72.22 |       10 |   77.77 |   73.58
-  database.ts          |   72.22 |       10 |   77.77 |   73.58
+ src/config            |   66.66 |    22.22 |      70 |   68.42
+  database.ts          |   66.66 |    22.22 |      70 |   68.42
  src/controllers       |   76.54 |    35.48 |      90 |   76.54
   authController.ts    |     100 |    66.66 |     100 |     100
   vehicleController.ts |   70.31 |       28 |    87.5 |   70.31
@@ -398,9 +418,9 @@ All files              |   88.32 |    70.94 |   88.23 |   88.17
  src/routes            |     100 |      100 |     100 |     100
   auth.ts              |     100 |      100 |     100 |     100
   vehicles.ts          |     100 |      100 |     100 |     100
- src/services          |    99.2 |    86.59 |     100 |     100
+ src/services          |   99.15 |    86.59 |     100 |     100
   authService.ts       |     100 |      100 |     100 |     100
-  vehicleService.ts    |   98.86 |     84.7 |     100 |     100
+  vehicleService.ts    |   98.79 |     84.7 |     100 |     100
 ```
 
 Run the suite:
@@ -439,36 +459,71 @@ emails, unknown IDs, out-of-stock purchases, and invalid restock amounts.
 
 ---
 
-## ☁️ Deployment Notes
+## ☁️ Deployment
 
-The app is deployment-ready. A typical setup:
+The app is deployed on **Vercel** with **Turso** as the persistent database.
 
-### Backend (Render, Railway, Fly.io, etc.)
+| Component | URL |
+|-----------|-----|
+| Frontend | [car-dealership-frontend-eight.vercel.app](https://car-dealership-frontend-eight.vercel.app) |
+| API | [car-dealership-api-liard.vercel.app](https://car-dealership-api-liard.vercel.app) |
+| Health check | [car-dealership-api-liard.vercel.app/api/health](https://car-dealership-api-liard.vercel.app/api/health) |
+| Database | Turso (hosted libSQL) |
 
-- Build command: `npm install && npm run build`
-- Start command: `npm start`
-- Environment variables:
-  - `PORT` (provided by the platform)
-  - `JWT_SECRET` (long random string)
-  - `FRONTEND_URL` (your deployed frontend origin, for CORS)
-  - `NODE_ENV=production`
+### Architecture
 
-The SQLite file lives at `backend/data/dealership.db`. On platforms with ephemeral
-filesystems, mount a persistent disk or switch the database layer to a managed
-PostgreSQL instance.
+- `frontend/` is a static Vite build served by Vercel.
+- `backend/` runs as a Vercel serverless function (`api/index.ts`) behind a
+  catch-all rewrite in `backend/vercel.json`.
+- Data lives in Turso, so it survives serverless cold starts and redeploys.
+  Vercel's own filesystem is ephemeral, which is why the API does not rely on a
+  local SQLite file in production.
 
-### Frontend (Vercel, Netlify, Cloudflare Pages, etc.)
+### Backend deployment
 
-- Build command: `npm run build`
-- Output directory: `dist`
-- Environment variable:
+1. Create a Vercel project with root directory `backend`.
+2. Add a Turso database (Vercel Marketplace → Turso Cloud, or the Turso dashboard).
+3. Set these environment variables:
 
-```env
-VITE_API_URL=https://your-api.example.com/api
-```
+   ```env
+   TURSO_DATABASE_URL=libsql://your-db-your-org.turso.io
+   TURSO_AUTH_TOKEN=your-turso-auth-token
+   JWT_SECRET=a-long-random-secret
+   FRONTEND_URL=https://your-frontend.vercel.app
+   NODE_ENV=production
+   ```
 
-When `VITE_API_URL` is not set, the frontend uses `/api`, which works with the
-Vite dev proxy locally.
+4. Seed the remote database once (with the Turso variables exported):
+
+   ```bash
+   cd backend
+   npm run seed
+   ```
+
+5. Deploy:
+
+   ```bash
+   vercel --prod
+   ```
+
+### Frontend deployment
+
+1. Create a Vercel project with root directory `frontend`.
+2. Set `VITE_API_URL=https://your-api.vercel.app/api`.
+3. Deploy:
+
+   ```bash
+   vercel --prod
+   ```
+
+`frontend/vercel.json` rewrites client-side routes to `index.html`, so React
+Router deep links work on refresh.
+
+### Alternative hosts
+
+The backend also runs on Render, Railway, Fly.io, or any Node host with
+`npm install && npm run build` and `npm start`. If you use the local SQLite file
+instead of Turso, mount a persistent disk at `backend/data`.
 
 ---
 
@@ -506,6 +561,12 @@ Vite dev proxy locally.
 6. **Completion pass** — In OpenCode I used the assistant to find missing frontend
    dependencies, fix TypeScript `verbatimModuleSyntax` errors, add demo seeding,
    capture screenshots, and assemble this README and `PROMPTS.md`.
+
+7. **Deployment and persistence** — For the live demo I used the assistant to
+   migrate the data layer from `sql.js` to `@libsql/client`, provision a Turso
+   database through the Vercel Marketplace, deploy the frontend and API as two
+   Vercel projects, and verify CORS, JWT auth, search, purchase, restock, and
+   role checks against the deployed URLs.
 
 ### Reflection
 

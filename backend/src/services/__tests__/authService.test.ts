@@ -7,9 +7,9 @@
  */
 import { getTestDatabase } from '../../config/database';
 import { registerUser, loginUser } from '../authService';
-import { Database } from 'sql.js';
+import { Client } from '@libsql/client';
 
-let db: Database;
+let db: Client;
 
 beforeEach(async () => {
   db = await getTestDatabase();
@@ -70,13 +70,11 @@ describe('authService.registerUser', () => {
     await registerUser(db, { email: 'secure@example.com', password: 'mypassword' });
 
     // Read raw from DB to verify hashing
-    const stmt = db.prepare('SELECT password FROM users WHERE email = ?');
-    stmt.bind(['secure@example.com']);
-    let stored = '';
-    while (stmt.step()) {
-      stored = stmt.getAsObject().password as string;
-    }
-    stmt.free();
+    const result = await db.execute({
+      sql: 'SELECT password FROM users WHERE email = ?',
+      args: ['secure@example.com'],
+    });
+    const stored = result.rows[0]?.password as string;
 
     expect(stored).not.toBe('mypassword');
     expect(stored).toMatch(/^\$2[ab]\$/); // bcrypt hash pattern

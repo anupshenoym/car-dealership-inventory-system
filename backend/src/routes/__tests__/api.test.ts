@@ -4,13 +4,13 @@
  */
 import request from 'supertest';
 import app from '../../app';
-import { getTestDatabase, closeDatabase } from '../../config/database';
-import { Database } from 'sql.js';
+import { getTestDatabase } from '../../config/database';
+import { Client } from '@libsql/client';
 
 // We override the database module to use an in-memory test DB for integration tests
 jest.mock('../../config/database', () => {
   const actual = jest.requireActual('../../config/database');
-  let testDb: Database | null = null;
+  let testDb: Client | null = null;
 
   return {
     ...actual,
@@ -20,7 +20,6 @@ jest.mock('../../config/database', () => {
       }
       return testDb;
     },
-    persistDatabase: () => {}, // no-op for tests
   };
 });
 
