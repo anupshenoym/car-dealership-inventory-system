@@ -5,7 +5,7 @@ It combines a RESTful Node.js/TypeScript API, a persistent SQLite-compatible dat
 (libSQL/Turso in production), JWT authentication, role-based access control, and a
 premium dark-mode React SPA.
 
-**Live demo:** [car-dealership-frontend-eight.vercel.app](https://car-dealership-frontend-eight.vercel.app)  
+**Live demo:** [autovault-inventory.vercel.app](https://autovault-inventory.vercel.app)  
 **API:** [car-dealership-api-liard.vercel.app/api/health](https://car-dealership-api-liard.vercel.app/api/health)  
 **Repository:** [github.com/anupshenoym/car-dealership-inventory-system](https://github.com/anupshenoym/car-dealership-inventory-system)
 
@@ -405,9 +405,9 @@ Time:        ~6.4s
 
 File                   | % Stmts | % Branch | % Funcs | % Lines
 -----------------------|---------|----------|---------|--------
-All files              |   88.17 |     72.1 |   85.71 |      88
- src                   |   94.11 |       50 |      50 |   94.11
-  app.ts               |   94.11 |       50 |      50 |   94.11
+All files              |   88.07 |       72 |   86.48 |    87.9
+ src                   |    91.3 |       60 |      75 |    91.3
+  app.ts               |    91.3 |       60 |      75 |    91.3
  src/config            |   66.66 |    22.22 |      70 |   68.42
   database.ts          |   66.66 |    22.22 |      70 |   68.42
  src/controllers       |   76.54 |    35.48 |      90 |   76.54
@@ -465,7 +465,7 @@ The app is deployed on **Vercel** with **Turso** as the persistent database.
 
 | Component | URL |
 |-----------|-----|
-| Frontend | [car-dealership-frontend-eight.vercel.app](https://car-dealership-frontend-eight.vercel.app) |
+| Frontend | [autovault-inventory.vercel.app](https://autovault-inventory.vercel.app) |
 | API | [car-dealership-api-liard.vercel.app](https://car-dealership-api-liard.vercel.app) |
 | Health check | [car-dealership-api-liard.vercel.app/api/health](https://car-dealership-api-liard.vercel.app/api/health) |
 | Database | Turso (hosted libSQL) |

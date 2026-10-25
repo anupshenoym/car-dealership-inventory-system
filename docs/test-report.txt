@@ -4,93 +4,93 @@
 
 PASS src/services/__tests__/vehicleService.test.ts
   vehicleService.createVehicle
-    √ should create and return a vehicle with a generated ID (18 ms)
-    √ should throw if required fields are missing (20 ms)
-    √ should throw if price is negative (2 ms)
-    √ should throw if quantity is negative (1 ms)
-    √ should throw for invalid year (2 ms)
-    √ should persist optional fields (1 ms)
+    √ should create and return a vehicle with a generated ID (20 ms)
+    √ should throw if required fields are missing (27 ms)
+    √ should throw if price is negative (3 ms)
+    √ should throw if quantity is negative (3 ms)
+    √ should throw for invalid year (3 ms)
+    √ should persist optional fields (3 ms)
   vehicleService.getAllVehicles
     √ should return an empty list when no vehicles exist (2 ms)
     √ should return all vehicles with pagination metadata (2 ms)
   vehicleService.getVehicleById
-    √ should return a vehicle by ID (2 ms)
-    √ should return undefined for unknown ID (1 ms)
+    √ should return a vehicle by ID (3 ms)
+    √ should return undefined for unknown ID (2 ms)
   vehicleService.searchVehicles
-    √ should filter by make (3 ms)
-    √ should filter by model (4 ms)
-    √ should filter by category (3 ms)
+    √ should filter by make (4 ms)
+    √ should filter by model (3 ms)
+    √ should filter by category (4 ms)
     √ should filter by price range (4 ms)
     √ should return case-insensitive results (3 ms)
     √ should return all vehicles with no filters (4 ms)
   vehicleService.updateVehicle
-    √ should update specified fields (3 ms)
-    √ should throw if vehicle does not exist (1 ms)
-    √ should reject negative price on update (2 ms)
+    √ should update specified fields (2 ms)
+    √ should throw if vehicle does not exist (2 ms)
+    √ should reject negative price on update (3 ms)
   vehicleService.deleteVehicle
-    √ should delete a vehicle (2 ms)
+    √ should delete a vehicle (4 ms)
     √ should throw when deleting a non-existent vehicle (1 ms)
   vehicleService.purchaseVehicle
     √ should decrement quantity by 1 (3 ms)
-    √ should throw when out of stock (2 ms)
-    √ should throw for unknown vehicle (2 ms)
+    √ should throw when out of stock (3 ms)
+    √ should throw for unknown vehicle (1 ms)
   vehicleService.restockVehicle
-    √ should increment quantity by given amount (3 ms)
-    √ should throw for zero or negative amount (2 ms)
+    √ should increment quantity by given amount (2 ms)
+    √ should throw for zero or negative amount (3 ms)
     √ should throw for unknown vehicle (2 ms)
 
 PASS src/services/__tests__/authService.test.ts
   authService.registerUser
-    √ should register a new user and return token + user data (109 ms)
-    √ should register a user with admin role when specified (93 ms)
-    √ should throw if email is already taken (100 ms)
-    √ should throw if email is missing (4 ms)
+    √ should register a new user and return token + user data (120 ms)
+    √ should register a user with admin role when specified (100 ms)
+    √ should throw if email is already taken (103 ms)
+    √ should throw if email is missing (6 ms)
     √ should throw if password is too short (2 ms)
-    √ should throw if email format is invalid (1 ms)
-    √ should hash the password (not store plain text) (79 ms)
+    √ should throw if email format is invalid (2 ms)
+    √ should hash the password (not store plain text) (93 ms)
   authService.loginUser
-    √ should return a token and user data for valid credentials (160 ms)
-    √ should throw for wrong password (162 ms)
-    √ should throw for non-existent email (81 ms)
-    √ should throw if email or password is missing (79 ms)
+    √ should return a token and user data for valid credentials (187 ms)
+    √ should throw for wrong password (195 ms)
+    √ should throw for non-existent email (95 ms)
+    √ should throw if email or password is missing (97 ms)
 
 PASS src/routes/__tests__/api.test.ts
   POST /api/auth/register
-    √ should register successfully and return 201 (92 ms)
-    √ should return 409 for duplicate email (91 ms)
+    √ should register successfully and return 201 (109 ms)
+    √ should return 409 for duplicate email (108 ms)
     √ should return 400 for invalid email (4 ms)
   POST /api/auth/login
-    √ should login and return 200 with token (84 ms)
-    √ should return 401 for wrong credentials (88 ms)
+    √ should login and return 200 with token (92 ms)
+    √ should return 401 for wrong credentials (89 ms)
   POST /api/vehicles
-    √ should add a vehicle when authenticated (8 ms)
-    √ should return 401 without a token (5 ms)
-    √ should return 400 for missing required fields (4 ms)
+    √ should add a vehicle when authenticated (10 ms)
+    √ should return 401 without a token (7 ms)
+    √ should return 400 for missing required fields (6 ms)
   GET /api/vehicles
-    √ should return vehicle list for authenticated users (5 ms)
-    √ should return 401 without auth (4 ms)
+    √ should return vehicle list for authenticated users (6 ms)
+    √ should return 401 without auth (5 ms)
   GET /api/vehicles/search
-    √ should search by make (6 ms)
+    √ should search by make (8 ms)
   PUT /api/vehicles/:id
-    √ should update a vehicle (5 ms)
+    √ should update a vehicle (6 ms)
     √ should return 404 for unknown vehicle (4 ms)
   POST /api/vehicles/:id/purchase
-    √ should purchase and decrement quantity (5 ms)
+    √ should purchase and decrement quantity (6 ms)
   POST /api/vehicles/:id/restock (Admin only)
-    √ should allow admin to restock (5 ms)
-    √ should return 403 when non-admin tries to restock (3 ms)
+    √ should allow admin to restock (7 ms)
+    √ should return 403 when non-admin tries to restock (5 ms)
   DELETE /api/vehicles/:id (Admin only)
-    √ should return 403 when non-admin tries to delete (3 ms)
-    √ should allow admin to delete (4 ms)
+    √ should return 403 when non-admin tries to delete (4 ms)
+    √ should allow admin to delete (6 ms)
   GET /api/health
-    √ should return health status (4 ms)
+    √ should return health status (5 ms)
 
 -----------------------|---------|----------|---------|---------|-----------------------------------
 File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                 
 -----------------------|---------|----------|---------|---------|-----------------------------------
-All files              |   88.17 |     72.1 |   85.71 |      88 |                                   
- src                   |   94.11 |       50 |      50 |   94.11 |                                   
-  app.ts               |   94.11 |       50 |      50 |   94.11 | 38                                
+All files              |   88.07 |       72 |   86.48 |    87.9 |                                   
+ src                   |    91.3 |       60 |      75 |    91.3 |                                   
+  app.ts               |    91.3 |       60 |      75 |    91.3 | 27,51                             
  src/config            |   66.66 |    22.22 |      70 |   68.42 |                                   
   database.ts          |   66.66 |    22.22 |      70 |   68.42 | 19-26,35-43,93-95                 
  src/controllers       |   76.54 |    35.48 |      90 |   76.54 |                                   
@@ -108,6 +108,6 @@ All files              |   88.17 |     72.1 |   85.71 |      88 |
 Test Suites: 3 passed, 3 total
 Tests:       57 passed, 57 total
 Snapshots:   0 total
-Time:        6.309 s
+Time:        6.49 s
 Ran all test suites.
 Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
