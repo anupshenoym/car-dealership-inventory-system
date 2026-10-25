@@ -1,5 +1,9 @@
 # 🚗 AutoVault — Car Dealership Inventory System
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-000000?logo=vercel&logoColor=white)](https://autovault-inventory.vercel.app)
+[![API](https://img.shields.io/badge/API-Online-22c55e)](https://car-dealership-api-liard.vercel.app/api/health)
+[![Tests](https://img.shields.io/badge/tests-57%20passing-22c55e)](#-test-report)
+
 A full-stack **Car Dealership Inventory System** built with **Test-Driven Development (TDD)**.
 It combines a RESTful Node.js/TypeScript API, a persistent SQLite-compatible database
 (libSQL/Turso in production), JWT authentication, role-based access control, and a
