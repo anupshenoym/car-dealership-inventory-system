@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { vehicleApi } from '../api/client';
-import { Vehicle } from '../types';
+import type { Vehicle } from '../types';
 import { useAuthStore, useToastStore } from '../store';
 import { VehicleCard } from '../components/VehicleCard';
 import { VehicleForm } from '../components/VehicleForm';
@@ -18,7 +18,9 @@ export function DashboardPage() {
   const [showForm, setShowForm] = useState(false);
   const [editVehicle, setEditVehicle] = useState<Vehicle | null>(null);
 
-  const [filters, setFilters] = useState({ make: '', model: '', category: '', minPrice: '', maxPrice: '' });
+  const emptyFilters = { make: '', model: '', category: '', minPrice: '', maxPrice: '' };
+  const [filters, setFilters] = useState(emptyFilters);
+  const [appliedFilters, setAppliedFilters] = useState(emptyFilters);
   const [activeFilters, setActiveFilters] = useState(false);
 
   const LIMIT = 12;
@@ -27,36 +29,37 @@ export function DashboardPage() {
   const fetchVehicles = useCallback(async () => {
     setLoading(true);
     try {
-      const hasFilter = Object.values(filters).some(v => v);
+      const hasFilter = Object.values(appliedFilters).some(v => v);
       let res;
       if (hasFilter) {
         const params: Record<string, string | number> = { page, limit: LIMIT };
-        Object.entries(filters).forEach(([k, v]) => { if (v) params[k] = v; });
+        Object.entries(appliedFilters).forEach(([k, v]) => { if (v) params[k] = v; });
         res = await vehicleApi.search(params);
-        setVehicles(res.data.vehicles);
-        setTotal(res.data.total);
       } else {
         res = await vehicleApi.list(page, LIMIT);
-        setVehicles(res.data.vehicles);
-        setTotal(res.data.total);
       }
+      setVehicles(res.data.vehicles);
+      setTotal(res.data.total);
     } catch {
       addToast('error', 'Failed to load vehicles.');
     } finally {
       setLoading(false);
     }
-  }, [page, filters]);
+  }, [page, appliedFilters, addToast]);
 
+  // Syncing the vehicle list with the API whenever the page or filters change.
+  // oxlint-disable-next-line react/set-state-in-effect
   useEffect(() => { fetchVehicles(); }, [fetchVehicles]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
-    fetchVehicles();
+    setAppliedFilters({ ...filters });
   };
 
   const clearFilters = () => {
-    setFilters({ make: '', model: '', category: '', minPrice: '', maxPrice: '' });
+    setFilters(emptyFilters);
+    setAppliedFilters(emptyFilters);
     setPage(1);
     setActiveFilters(false);
   };
@@ -72,7 +75,7 @@ export function DashboardPage() {
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 24px' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32 }}>
+        <div className="dashboard-header">
           <div>
             <h1 style={{ margin: '0 0 6px', fontSize: '2rem', fontWeight: 800, color: 'white' }}>
               Vehicle Inventory
@@ -140,7 +143,7 @@ export function DashboardPage() {
         {/* Search & Filter */}
         <div className="glass-card" style={{ borderRadius: 16, padding: '20px 24px', marginBottom: 28 }}>
           <form onSubmit={handleSearch}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: 12, marginBottom: activeFilters ? 16 : 0 }}>
+            <div className="search-grid" style={{ marginBottom: activeFilters ? 16 : 0 }}>
               <div style={{ position: 'relative' }}>
                 <Search size={16} color="var(--color-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
                 <input id="search-make" value={filters.make} onChange={e => setFilters(p => ({ ...p, make: e.target.value }))}
@@ -152,7 +155,7 @@ export function DashboardPage() {
                 className="input-field">
                 {CATEGORIES.map(c => <option key={c} value={c}>{c || 'All Categories'}</option>)}
               </select>
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div className="search-actions">
                 <button id="search-submit" type="submit" className="btn-primary" style={{ whiteSpace: 'nowrap', padding: '10px 16px' }}>
                   Search
                 </button>
@@ -195,7 +198,7 @@ export function DashboardPage() {
             <div style={{ fontSize: 64, marginBottom: 16 }}>🚗</div>
             <h3 style={{ color: 'white', marginBottom: 8 }}>No vehicles found</h3>
             <p style={{ color: 'var(--color-muted)' }}>
-              {Object.values(filters).some(v => v) ? 'Try different search filters.' : 'No vehicles in inventory yet.'}
+              {Object.values(appliedFilters).some(v => v) ? 'Try different search filters.' : 'No vehicles in inventory yet.'}
             </p>
             {isAdmin && <button className="btn-primary" onClick={() => setShowForm(true)} style={{ marginTop: 16, padding: '10px 24px' }}>Add First Vehicle</button>}
           </div>

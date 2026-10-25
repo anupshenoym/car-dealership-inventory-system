@@ -1,5 +1,5 @@
-﻿@import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap');
+@import "tailwindcss";
 
 :root {
   --color-primary: #6366f1;
@@ -71,3 +71,33 @@ h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
 .auth-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 24px; padding: 48px; width: 100%; max-width: 440px; box-shadow: var(--shadow-glow); animation: fadeInUp 0.5s ease; }
 .stat-card { background: var(--gradient-card); border: 1px solid var(--color-border); border-radius: 16px; padding: 24px; transition: all 0.2s ease; }
 .stat-card:hover { border-color: rgba(99,102,241,0.3); box-shadow: var(--shadow-glow); }
+
+/* ─── Responsive layout ─────────────────────── */
+.dashboard-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+.search-grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; }
+.search-actions { display: flex; gap: 8px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+@media (max-width: 900px) {
+  .search-grid { grid-template-columns: 1fr 1fr; }
+  .search-actions { grid-column: span 2; }
+  .navbar-user-email { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  .dashboard-header { flex-direction: column; align-items: stretch; }
+  .search-grid { grid-template-columns: 1fr; }
+  .search-actions { grid-column: span 1; }
+  .form-grid { grid-template-columns: 1fr; }
+  .auth-card { padding: 28px 22px; }
+  .modal-content { padding: 24px !important; }
+  .navbar-inner { padding: 0 16px; }
+  .navbar-links { display: none !important; }
+  .toast-container { left: 16px; right: 16px; bottom: 16px; }
+  .toast { min-width: 0; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

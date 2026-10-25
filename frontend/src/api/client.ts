@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+// In development Vite proxies /api to the backend. In production set
+// VITE_API_URL (e.g. https://autovault-api.onrender.com/api) at build time.
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: { 'Content-Type': 'application/json' },
 });
 

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store';
-import { Car, LayoutDashboard, LogOut, Shield, PlusCircle } from 'lucide-react';
+import { Car, LayoutDashboard, LogOut, PlusCircle } from 'lucide-react';
 
 export function Navbar() {
   const { user, isAuthenticated, clearAuth } = useAuthStore();
@@ -13,7 +13,7 @@ export function Navbar() {
 
   return (
     <nav className="navbar">
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="navbar-inner">
         {/* Logo */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{
@@ -31,21 +31,13 @@ export function Navbar() {
 
         {/* Nav Links */}
         {isAuthenticated && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div className="navbar-links" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, color: 'var(--color-muted)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, transition: 'all 0.2s' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'white')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}>
               <LayoutDashboard size={16} />
               Dashboard
             </Link>
-            {user?.role === 'admin' && (
-              <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, color: 'var(--color-muted)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, transition: 'all 0.2s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'white')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}>
-                <Shield size={16} />
-                Admin
-              </Link>
-            )}
           </div>
         )}
 
@@ -62,7 +54,7 @@ export function Navbar() {
                 }}>
                   {user?.email[0].toUpperCase()}
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="navbar-user-email" style={{ display: 'flex', flexDirection: 'column' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', lineHeight: 1.2 }}>
                     {user?.email.split('@')[0]}
                   </span>

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Vehicle } from '../types';
+import { useState } from 'react';
+import type { Vehicle } from '../types';
 import { vehicleApi } from '../api/client';
 import { useToastStore, useAuthStore } from '../store';
 import { X, Save, Package } from 'lucide-react';
@@ -11,6 +11,8 @@ interface VehicleFormProps {
 }
 
 const CATEGORIES = ['Sedan', 'SUV', 'Sports', 'Truck', 'Electric', 'Hatchback', 'Coupe', 'Van', 'Luxury', 'Other'];
+const CURRENT_YEAR = new Date().getFullYear();
+const MAX_YEAR = CURRENT_YEAR + 2;
 
 export function VehicleForm({ vehicle, onClose, onSaved }: VehicleFormProps) {
   const { addToast } = useToastStore();
@@ -23,7 +25,7 @@ export function VehicleForm({ vehicle, onClose, onSaved }: VehicleFormProps) {
   const [form, setForm] = useState({
     make: vehicle?.make || '',
     model: vehicle?.model || '',
-    year: vehicle?.year?.toString() || new Date().getFullYear().toString(),
+    year: vehicle?.year?.toString() || String(CURRENT_YEAR),
     category: vehicle?.category || 'Sedan',
     price: vehicle?.price?.toString() || '',
     quantity: vehicle?.quantity?.toString() || '',
@@ -98,7 +100,7 @@ export function VehicleForm({ vehicle, onClose, onSaved }: VehicleFormProps) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 20px' }}>
+          <div className="form-grid">
             <div style={fieldStyle}>
               <label style={labelStyle}>Make *</label>
               <input id="form-make" name="make" value={form.make} onChange={handleChange} className="input-field" placeholder="e.g. Toyota" required />
@@ -109,7 +111,7 @@ export function VehicleForm({ vehicle, onClose, onSaved }: VehicleFormProps) {
             </div>
             <div style={fieldStyle}>
               <label style={labelStyle}>Year *</label>
-              <input id="form-year" name="year" type="number" value={form.year} onChange={handleChange} className="input-field" min="1886" max={new Date().getFullYear() + 2} required />
+              <input id="form-year" name="year" type="number" value={form.year} onChange={handleChange} className="input-field" min="1886" max={MAX_YEAR} required />
             </div>
             <div style={fieldStyle}>
               <label style={labelStyle}>Category *</label>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Vehicle } from '../types';
+import type { Vehicle } from '../types';
 import { vehicleApi } from '../api/client';
 import { useAuthStore, useToastStore } from '../store';
 import { ShoppingCart, Edit2, Trash2, Package, DollarSign, Calendar, Tag } from 'lucide-react';
